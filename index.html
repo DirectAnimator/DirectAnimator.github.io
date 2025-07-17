@@ -1,0 +1,487 @@
+
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>FreeAnimate</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- <base href="/"> -->
+
+        <!--FACEBOOK-->
+    <meta property="og:image" content="">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="682">
+    <meta property="og:image:height" content="682">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content=""/>
+    <meta property="og:title" content="FreeAnimate" />
+    <meta property="og:description" content="Project page for FreeAnimate" />
+
+        <!--TWITTER-->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="FreeAnimate" />
+    <meta name="twitter:description" content="Project page for FreeAnimate." />
+    <meta name="twitter:image" content="" />
+
+
+    <!--<link rel="apple-touch-icon" href="apple-touch-icon.png"> -->
+    <!-- <link rel="icon" type="image/png" href="img/seal_icon.png"> -->
+    <!-- Place favicon.ico in the root directory -->
+
+    <script type="text/javascript" async
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML">
+    </script>
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    
+    <script src="js/app.js"></script>
+</head>
+
+<body>
+    <br>
+    <div class="container" id="main" style="width: 85%;">
+    <!-- <div class="container" id="main"> -->
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <b>Beyond Skeletons</b>: Learning  Animation Directly from Driving Videos with Same2X Training Strategy</br>
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <ul class="list-inline">
+                    <li>
+                        <br><p>Anonymous Submission</p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+            <div class="row">
+                <!-- 图像部分 -->
+                <div class="col-md-8 col-md-offset-2 text-center">
+                    <img width="80%" src="assets/teaser.png" class="img-responsive" alt="teaser" style="display: block; margin: auto;">
+                    <p style="margin-top: 10px; font-size: 14px; color: #555; text-align: left;"> Figure1. Our proposed driving cue provides a more robust representation for complex motions and self-occlusions. 
+                                            <strong><em>Left</em></strong>: Errors in skeleton maps such as front-back confusion, inaccurate hand localization, and missing limbs result in noticeable artifacts in StableAnimator outputs. 
+                                            In contrast, DirectAnimator uses raw pixels from the driving video as driving signals, generating accurate and realistic frames. <strong><em>Right</em></strong>: 
+                                            The Same2X training strategy significantly improves training efficiency in cross-ID scenarios (Stage 2), reaching the same loss level <strong>6.7×</strong> faster than training without it.</p>
+                                    </div>
+            </div>
+        <div class="row">
+            <!-- 文本部分 -->
+            <div class="col-md-8 col-md-offset-2">
+            <h3 style="font-weight: bold;">
+                Abstract
+            </h3>
+            <p class="text-justify">
+                Human Image Animation aims to generate a video from a static reference image, guided by pose information extracted from a driving video. 
+                Existing approaches often rely on pose estimators to extract intermediate representations, but such signals are prone to errors under occlusion, motion blur, or complex articulation. 
+                In this work, we propose <strong>DirectAnimator</strong>, a novel HIA framework that bypasses pose extraction and directly learns from raw driving videos. 
+                We introduce a structured Driving Cue Triplet consisting of pose, face, and location cues to capture motion, expression, and alignment signals in a semantically rich yet stable manner. 
+                To tackle the challenges of training under cross-ID settings, we further propose the Same2X training strategy, which aligns internal representations learned from same-ID data to regularize cross-ID learning. 
+                Extensive experiments demonstrate that DirectAnimator achieves state-of-the-art animation quality while significantly improving training efficiency and robustness in challenging scenarios.
+            </p>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="font-weight: bold;">
+                    Network Architecture
+                </h3>
+                The overall architecture of DirectAnimator is illustrated in Figure 2 (a). The input comprises a reference image <strong>I</strong> and a driving video sequence <strong>D<sub>1:N</sub> = [D<sub>1</sub>, ..., D<sub>N</sub>]</strong>. We first preprocess the driving video to extract driving cues that capture essential pose and expression information. These cues are then encoded into latent features using a 3D Variational Autoencoder (3D VAE), and subsequently transformed into a sequence of visual patch embeddings via a Patchify module (DiT). The resulting embeddings are fed into the proposed CueFusion DiT Block, which performs multi-source feature fusion and denoising to generate the animated frames. </p>
+                <br>
+                <img width="90%" src="assets/pipeline.png" class="img-responsive" alt="pipeline" style="margin:auto">
+                <p style="margin-top: 10px; font-size: 14px; color: #555; text-align: left;">
+                    Figure 2. Overview of DirectAnimator.
+                    (a) We replace the skeleton maps with our proposed Driving Cue triplet: Pose Cue (motion), Face Cue (expression), and Location Cue (alignment). A frozen VAE encoder maps the reference image, pose cue, and face cue into the latent space. Pose and face latents are each concatenated with their corresponding masks from the location cue. These features are then patchified and fed into the CF-DiT Block.
+                    (b) The CF-DiT Block injects pose and face cues via adaptive LayerNorm with time-conditioned modulation, and uses gated residuals to ensure stable and controllable denoising.
+                </p>
+                <br>
+
+                <div class="row" style="margin-left: 40px;">
+                    <div class="col-md-6">
+                        <h4 style="font-weight: bold;">(1) Driving Cue Extraction</h4>
+                        <p class="text-justify"></p>
+                            To overcome the limitations of pose estimators, we propose a pose-free representation called the <strong>Driving Cue Triplet</strong>, which captures <strong>motion</strong>, <strong>expression</strong>, and <strong>spatial alignment</strong> directly from raw video frames. This triplet consists of:
+                        </p>
+                        <ul>
+                            <li><strong>Pose Cue:</strong> foreground masks filtered in the frequency domain to emphasize motion while suppressing irrelevant details;</li>
+                            <li><strong>Face Cue:</strong> cropped and centered facial regions that preserve expressive information;</li>
+                            <li><strong>Location Cue:</strong> soft body and face masks that serve as spatial priors for aligning the reference and driving identities.</li>
+                        </ul>
+                        <p class="text-justify">
+                            Together, these cues form a stable, semantically rich control signal for human animation without relying on explicit keypoints or skeleton maps.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-center">
+                        <div class="text-center">
+                            <img width="90%" src="assets/driving_cue.png" class="img-responsive" alt="driving_cue" style="margin:auto">
+                            <p style="margin-top: 10px; font-size: 14px; color: #555; text-align: center;">
+                                Figure 3. Examples of driving cues.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+        
+                <div style="margin-left: 40px;">
+                    <h4 style="font-weight: bold;">(2) CueFusion DiT Block</h4>
+                    <p class="text-justify">
+                    To effectively inject motion and expression cues into the diffusion process, we introduce the <strong>CueFusion DiT (CF-DiT) Block</strong>, illustrated in Figure 2(b). It incorporates driving cues via adaptive Layer Normalization (AdaLN) and gated residual connections, enabling stable and controllable animation synthesis.
+                    </p>
+                    <p class="text-justify">
+                    Given a time embedding \( e_t \), we first compute modulation parameters for the pose and face cues through an MLP:
+                    </p>
+                    <!-- Equation 1 -->
+                    <div class="text-center">
+                    \[
+                    \alpha_p, \beta_p, \gamma_p, \alpha_f, \beta_f, \gamma_f = \mathrm{MLP}(\mathrm{SiLU}(e_t))
+                    \]
+                    </div>
+                    <p class="text-justify">
+                    These parameters are used to modulate the normalized embeddings of the pose cue \( e_p \) and face cue \( e_f \):
+                    </p>
+                    <!-- Equation 2 -->
+                    <div class="text-center">
+                    \[
+                    e^{M}_{p} = \mathrm{LN}(e_p) \cdot (1 + \alpha_p) + \beta_p, \quad
+                    e^{M}_{f} = \mathrm{LN}(e_f) \cdot (1 + \alpha_f) + \beta_f
+                    \]
+                    </div>
+                    <p class="text-justify">
+                    We then integrate both raw and modulated cues using gated residual connections:
+                    </p>
+                    <!-- Equation 3 -->
+                    <div class="text-center">
+                    \[
+                    e^{G}_{p} = e_p + \gamma_p \cdot e^{M}_{p}, \quad
+                    e^{G}_{f} = e_f + \gamma_f \cdot e^{M}_{f}
+                    \]
+                    </div>
+                    <p class="text-justify">
+                    These enriched embeddings are added to the DiT’s text and vision features before entering the 3D attention layers, ensuring that driving cues are seamlessly fused throughout the denoising process. This design improves both the controllability and robustness of the animation output.
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+
+        <div class="row"> 
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="font-weight: bold;">
+                    Same2X Training Strategy
+                </h3>
+                <div class="text-center">
+                    <br>
+                    <img width="60%" src="assets/same2x.png" class="img-responsive" alt="same2x" style="margin:auto">
+                    <p style="margin-top: 10px; font-size: 14px; color: #555; text-align: center;">
+                        Figure 4. Overview of the Same2X training strategy.
+                    </p>
+                    <br>
+                </div>
+                <p class="text-justify">
+                To ease training in the cross-ID setting, we propose the <strong>Same2X training strategy</strong>, whose pipeline is illustrated in Figure 4. The strategy consists of a same-ID and a cross-ID training stage. In the same-ID training stage, we train the model using pairs of reference images and driving videos from the same video clip. In the cross-ID stage, we generate pseudo driving cues from same-ID data using StableAnimator and Face-Adapter to simulate cross-ID conditions.
+                </p>
+                <p class="text-justify">
+                During the cross-ID training stage, the model is supervised not only by denoising loss but also by feature alignment signals from the model trained under same-ID setting. To this end, we introduce a <strong>Same2X Alignment Loss (S2X Loss)</strong> to guide the feature dynamics:
+                </p>
+                <!-- Equation 1: Same2X Alignment Loss -->
+                <div class="text-center">
+                \[
+                \mathcal{L}_{\text{S2X}}(\theta_S, \theta_X) := -\mathbb{E}_{x, c, \epsilon, t} \left[ \frac{1}{N} \sum_{n=1}^{N} \text{sim}\left(h_s^{[n]}, h_x^{[n]}\right) \right]
+                \]
+                </div>
+                <p class="text-justify">
+                Here, \( \theta_S \) and \( \theta_X \) denote the model trained under same-ID and cross-ID settings, respectively. \( h_s^{[n]} \) and \( h_x^{[n]} \) represent the patch embeddings at the \( L \)-th DiT block for the same-ID and cross-ID models, and \( n \) indexes the patch tokens. The function \( \text{sim}(\cdot, \cdot) \) measures cosine similarity.
+                </p>
+                <p class="text-justify">
+                We combine the S2X Loss and denoising loss to train DirectAnimator, with the overall loss function in the cross-ID training stage formulated as:
+                </p>
+                <!-- Equation 2: Final Loss -->
+                <div class="text-center">
+                \[
+                \mathcal{L} := \mathcal{L}_{\text{Denoising}} + \lambda \cdot \mathcal{L}_{\text{S2X}}
+                \]
+                </div>
+                <p class="text-justify">
+                where \( \lambda \) is a factor controlling the contribution of the S2X loss. As demonstrated in Figure 1, the Same2X training strategy significantly accelerates convergence in the cross-ID setting by alleviating the learning difficulty. To the best of our knowledge, this is the first approach to leverage feature alignment of different setting for training HIA models.
+                </p>
+                
+            </div>
+        </div>
+
+
+        <div class="row"> 
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="font-weight: bold;">
+                    Comparisions with Existed Approaches
+                </h3>
+                <p class="text-justify">
+                    We compare <strong>DirectAnimator</strong> with several state-of-the-art human image animation methods, 
+                    including <em>AnimateAnyone</em>, <em>MimicMotion</em>, <em>StableAnimator</em>, and <em>UniAnimate-DiT </em>. 
+                    As shown in the following video comparisons, DirectAnimator consistently produces more accurate body motions, 
+                    realistic facial expressions, and stronger identity preservation, even in the presence of occlusions or rapid movements.
+                    Unlike pose-driving baselines, our method leverages raw visual cues and exhibits greater robustness in challenging scenarios.
+                </p>
+                <div class="row">
+                <!-- <br><image width="100%" src="assets/compare_result.png" class="img-responsive" alt="compare_result" style="margin:auto"><br> -->
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/TikTok/option-1-ready.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/TikTok/option-2-ready.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/TikTok/option-3-ready.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/Unseen/option-1-ready-1.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <!-- <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/Unseen/option-1-ready-2.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video> -->
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/Unseen/option-2-ready.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+                <video id="comparison-video" width="100%" autoplay loop muted controls>
+                    <source src="assets/videos/Comparisions_videos/Unseen/option-3-ready.mp4" type="video/mp4" />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="font-weight: bold;"> 
+                    Animation Results
+                </h3>
+                <p class="text-justify">
+                We present qualitative animation results generated by <strong>DirectAnimator</strong>. 
+                </p>
+                <p class="text-justify">
+                Our method delivers photorealistic, identity-preserving animations with smooth motion dynamics and expressive facial details, 
+                even in challenging scenarios such as occlusion, motion blur, or cross-domain appearance gaps.
+                </p>
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-8/video_20210723_6988193630900980998_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-8/video_20210723_6988193630900980998_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-8/video_20210723_6988193630900980998_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-4/video_20240207_7332841515829497094_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-4/video_20240207_7332841515829497094_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-4/video_20240207_7332841515829497094_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-5/video_20240210_7334079055383334150_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-5/video_20240210_7334079055383334150_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-5/video_20240210_7334079055383334150_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-6/video_20210624_6977404298569207045_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-6/video_20210624_6977404298569207045_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-6/video_20210624_6977404298569207045_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-1/video_20210605_6970357725247163653_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-7/video_20210705_6981265902478183685_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="33%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_Unseen/option-2/video_20211006_7016028686704987397_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3 style="font-weight: bold;">
+                    Other domain results
+                </h3>
+                <p class="text-justify">
+                    <strong>DirectAnimator</strong> exhibits robust generalization capabilities across other domains, including AI-generated realistic characters and animated figures.
+                </p>            
+                
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-4/video_20240210_7334079055383334150_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-4/video_20240210_7334079055383334150_vs_0002.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-4/video_20240210_7334079055383334150_vs_0004.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-4/video_20240210_7334079055383334150_vs_0007.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+                <div style="overflow-x: auto; text-align: center;">
+                    <table border="0" cellspacing="0" cellpadding="0" align="center" style="width: 150%;">
+                        <tr>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="100%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-2/video_20240316_7346744777712340229_vs_0001.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-2/video_20240316_7346744777712340229_vs_0003.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-2/video_20240316_7346744777712340229_vs_0004.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                            <td align="center" valign="middle" width="25%">
+                                <video id="v0" width="99%" autoplay loop muted controls>
+                                    <source src="assets/videos/Animation_on_OtherDomain/option-2/video_20240316_7346744777712340229_vs_0007.mp4" type="video/mp4" />
+                                </video>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2">
+                <h3>
+                    Acknowledgements
+                </h3>
+                <p class="text-justify">
+                The website template was borrowed from <a href="http://mgharbi.com/">Michaël Gharbi</a> and <a href="https://jonbarron.info/mipnerf/">Mip-NeRF</a>.
+                </p>
+            </div>
+        </div>
+
+    </div>  
+    <br><br><br>
+</body>
+</html>
